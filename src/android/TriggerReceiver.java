@@ -49,6 +49,9 @@ public class TriggerReceiver extends de.appplant.cordova.plugin.notification.Tri
 
         if (!updated) {
             LocalNotification.fireEvent("trigger", notification);
+            if(!notification.isRepeating()) {
+                notification.unpersist();
+            }
         }
     }
 

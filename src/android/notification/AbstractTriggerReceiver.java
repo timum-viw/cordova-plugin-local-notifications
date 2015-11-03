@@ -65,9 +65,6 @@ abstract public class AbstractTriggerReceiver extends BroadcastReceiver {
         if (options == null)
             return;
 
-        if (isFirstAlarmInFuture(options))
-            return;
-
         Builder builder = new Builder(options);
         Notification notification = buildNotification(builder);
         boolean updated = notification.isUpdate();
@@ -92,31 +89,5 @@ abstract public class AbstractTriggerReceiver extends BroadcastReceiver {
      *      Notification builder
      */
     abstract public Notification buildNotification (Builder builder);
-
-    /*
-     * If you set a repeating alarm at 11:00 in the morning and it
-     * should trigger every morning at 08:00 o'clock, it will
-     * immediately fire. E.g. Android tries to make up for the
-     * 'forgotten' reminder for that day. Therefore we ignore the event
-     * if Android tries to 'catch up'.
-     */
-    private Boolean isFirstAlarmInFuture (Options options) {
-        Notification notification = new Builder(options).build();
-
-        if (!notification.isRepeating())
-            return false;
-
-        Calendar now    = Calendar.getInstance();
-        Calendar alarm  = Calendar.getInstance();
-
-        alarm.setTime(notification.getOptions().getTriggerDate());
-
-        int alarmHour   = alarm.get(Calendar.HOUR_OF_DAY);
-        int alarmMin    = alarm.get(Calendar.MINUTE);
-        int currentHour = now.get(Calendar.HOUR_OF_DAY);
-        int currentMin  = now.get(Calendar.MINUTE);
-
-        return (currentHour != alarmHour && currentMin != alarmMin);
-    }
 
 }

@@ -162,7 +162,7 @@ public class Notification {
      * Schedule the local notification.
      */
     public void schedule() {
-        long triggerTime = options.getTriggerTime();
+        long triggerTime = getNextTriggerTime();
 
         persist();
 
@@ -246,6 +246,16 @@ public class Notification {
         // TODO
     }
 
+    public long getNextTriggerTime() {
+        long triggerTime = options.getTriggerTime();
+        if(!isRepeating()) {
+            return triggerTime;
+        }
+
+        long systemTime = System.currentTimeMillis();
+        long repeatInterval = options.getRepeatInterval();
+        return systemTime + (repeatInterval - (systemTime - triggerTime) % repeatInterval);
+    }
     /**
      * Count of triggers since schedule.
      */
