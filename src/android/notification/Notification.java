@@ -248,7 +248,7 @@ public class Notification {
 
     public long getNextTriggerTime() {
         long triggerTime = options.getTriggerTime();
-        if(!isRepeating()) {
+        if(!isRepeating() || !wasInThePast()) {
             return triggerTime;
         }
 
